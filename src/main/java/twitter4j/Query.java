@@ -28,7 +28,9 @@ package twitter4j;
 
 import twitter4j.http.HttpParameter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +45,8 @@ public class Query {
     private int rpp = -1;
     private int page = -1;
     private long sinceId = -1;
+    private String since = null;
+    private String until = null;
     private String geocode = null;
     public Query(){
     }
@@ -149,6 +153,10 @@ public class Query {
     public long getSinceId() {
         return sinceId;
     }
+    
+    public String getSince(){
+    	return since;
+    }
 
     /**
      * returns tweets with status ids greater than the given id.
@@ -157,6 +165,39 @@ public class Query {
     public void setSinceId(long sinceId) {
         this.sinceId = sinceId;
     }
+
+    /**
+     * returns tweets tweeted after the given date. 
+     * @param date A <code>String</code> in the format yyyy-MM-dd specifying the date.
+     */
+	public void setSince(String since) {
+		this.since=since;
+	}
+	
+	/**
+     * returns tweets tweeted after the given date. 
+     * @param date A <code>Date</code> specifying the date.
+     */
+	public void setSince(Date since) {
+		this.since=dateFormat.format(since);
+	}
+	
+    /**
+     * returns tweets tweeted before the given date. 
+     * @param date A <code>String</code> in the format yyyy-MM-dd specifying the date.
+     */
+	public void setUntil(String until) {
+		this.until=until;
+	}
+	
+	/**
+     * returns tweets tweeted before the given date. 
+     * @param date A <code>Date</code> specifying the date.
+     */
+	public void setUntil(Date until) {
+		this.until=dateFormat.format(until);
+	}
+
 
     /**
      * returns tweets with status ids greater than the given id.
@@ -175,6 +216,7 @@ public class Query {
 
     public static final String MILES = "mi";
     public static final String KILOMETERS = "km";
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * returns tweets by users located within a given radius of the given latitude/longitude, where the user's location is taken from their Twitter profile
@@ -207,6 +249,8 @@ public class Query {
         appendParameter("rpp",rpp , params);
         appendParameter("page", page, params);
         appendParameter("since_id",sinceId , params);
+        appendParameter("since",since , params);
+        appendParameter("until",until , params);
         appendParameter("geocode", geocode, params);
         HttpParameter[] paramArray = new HttpParameter[params.size()];
         return params.toArray(paramArray);
